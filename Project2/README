@@ -1,0 +1,37 @@
+README 
+The goal of the project is to develop a Web crawler that gathers data from a fake social networking site 'Fakebook' using HTTP protocol.
+
+Technologies used:
+Python
+BeautifulSoup - to parse secret_flag only.
+
+High Level Requirements:
+There are 5 secret_flags hidden somewhere on the fakebook website. The flags are unique for every student, and the pages that contain the flags will be different for each student.
+The webcrawler must execute on the command line using following syntax:
+./webcrawler [username] [password]
+username and password are used to log-in to Fakebook. The root page of Fakebook is available at http://cs5700sp16.ccs.neu.edu/ and the log-in form of Fakebook is available at http://cs5700sp16.ccs.neu.edu/accounts/login/?next=/fakebook/.
+
+The web crawler should print exactly fives lines of output: the five secret flags discovered during the crawl of Fakebook. All secret flags will appear in the following format (which makes them easy to identify):
+<h2 class='secret_flag' style="color:red">FLAG: 64-characters-of-random-alphanumerics</h2>
+
+Algorithm:
+1) Parse the arguments for username and password and initialize the frontier, visited, cookies, session variables.
+2) Create TCP socket connection and send HTTP GET request to Fakebook website.
+3) Retrieve sessionId, cookie value from the response, and create HTTP POST request to log-in to Fakebook.
+4) Use Breadth First Search Algorithm to crawl fakebook
+4.1) Read element from frontier as basePage
+4.2) Send HTTP GET request for the basePage, and process response.
+4.3) If the status code is 200, process the page, get all the links. Check if each link is available in visited or frontier list. If it isn't, add the link to the frontier. Check if secret_flag is present in the response.
+4.4) After processing all the links, mark the basePage as visited.
+4.5) If status code is other that 200, handle the various HTTP status codes.
+4.6) Repeat from Step 4.1 until we find 5 secret_flags or till frontier is empty.
+
+Challenges:
+1) Handling and understanding various HTTP status code response was difficult.
+2) We faced a lot of issues to tackle login failures, incomplete response, empty HTTP GET Response.
+
+TESTING Approach:
+1) We tested our code on CCIS Machines, using ssh(To connect) and scp (To copy from local machine to CCIS machines)
+2) We have tested our code for various use cases, 
+	Invalid Username/Password ,	Invalid number of arguments
+3) Tested that Secret_Flags are different for every user
