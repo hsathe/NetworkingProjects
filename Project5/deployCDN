@@ -1,0 +1,58 @@
+#!/bin/bash
+
+
+# List of EC2 instances
+
+ec2_instances=( "ec2-54-85-32-37.compute-1.amazonaws.com"
+				"ec2-54-193-70-31.us-west-1.compute.amazonaws.com" 
+				"ec2-52-38-67-246.us-west-2.compute.amazonaws.com" 
+				"ec2-52-51-20-200.eu-west-1.compute.amazonaws.com" 
+				"ec2-52-29-65-165.eu-central-1.compute.amazonaws.com"
+				"ec2-52-196-70-227.ap-northeast-1.compute.amazonaws.com" 
+				"ec2-54-169-117-213.ap-southeast-1.compute.amazonaws.com" 
+				"ec2-52-63-206-143.ap-southeast-2.compute.amazonaws.com" 
+				"ec2-54-233-185-94.sa-east-1.compute.amazonaws.com")
+
+
+ 
+# Parsing command line arguments to find out user name and key file given on command line 
+
+
+while getopts "n:i:p:o:u:" opt; do 
+    case $opt in
+    u)
+      userName=$OPTARG
+      ;;
+    i)
+      keyFile=$OPTARG
+      ;;
+
+    esac
+done
+
+# Copy the HTTP Server code and makefile onto each of the EC2 instances home directory and
+# SSH into each of EC2 instances and from http server location execute the make file
+
+for host in "${ec2_instances[@]}"; do 
+
+	#echo "Deploying HTTP Server on " $host
+	
+	scp -i $keyFile -r httpserver/ $userName@$host:~
+	ssh -i $keyFile $userName@$host "cd ~/httpserver/; chmod 777 httpserver; chmod 777 httpserver.py"
+
+done
+
+# Initialize DNS server name
+
+dnsserver=cs5700cdnproject.ccs.neu.edu
+#echo "Deploying DNS Server "
+
+# Copy DNS server code to remote location cs5700cdnproject.ccs.neu.edu and put it onto the home location
+# And navigate to the directory just copied to execute the make file.
+
+
+scp -i $keyFile -r dnsserver/ $userName@$dnsserver:~
+ssh -i $keyFile $userName@$dnsserver "cd ~/dnsserver/; chmod 777 dnsserver; chmod 777 dnsserver.py"
+
+
+

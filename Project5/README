@@ -1,0 +1,113 @@
+Project 5: Roll Your Own CDN
+----------
+Milestone:
+----------
+
+1) Implementing DNS
+We read the A type query. Extract the DNS packet and fetch the domain name. The IP address for 1 replica server is fetched and the DNS packet is packed with the new information. The Answer section count is incremented, and the corresponding flags are set. The idea is to respond with a DNS answer which provides the IP address of the replica server.
+
+2) Implementing HTTP Server
+In this program, we will take in the Port Number and the Name of the Origin Server as the input.We will create a http server using the HTTPServer command and bind it to the port number received. Upon recieving a request to a page, the HTTP server handler will be called. Based on the cache logic, we will hit the origin server and GET the contents.
+
+Challenges faced:
+1) Understanding the various components of the project
+2) DNS packet creationg and extraction
+3) Testing
+
+-----------------
+FINAL SUBMISSION:
+-----------------
+----------------
+STEPS TO EXECUTE:
+----------------
+1) ./deployCDN -p <port> -o <origin> -n <name> -u <username> -i <keyfile>
+2) ./runCDN -p <port> -o <origin> -n <name> -u <username> -i <keyfile>
+3) dig @DNS-HOST -p <port> CDN-NAME
+   This will return the IP address of closest replica server.
+
+4) wget http:REPLICA-IP:PORT/PAGE-TO-DOWNLOAD
+   This will download the page requested.
+
+5) ./stopCDN -p <port> -o <origin> -n <name> -u <username> -i <keyfile>
+
+-----------------
+IMPLEMENTING DNS:
+-----------------
+---------
+Approach:
+---------
+1) The program starts by accepting a PORT and CDN_NAME and creates object of DNS_Server_Class
+2)The DNS_Server_Class implements a ThreadingUDPServer, and instatiates a DNS_HANDLER_CLASS
+3) The DNS_Handler_class implements BaseRequestHandler and listens to DNS resolution requests and resolves them. handle() menthod is executed when the DNS Server enter server forever mode.
+4) The handle() method serves request resolution for cs5700cdn.example.com CDN_NAME and only expects Query Type: A / AAAA
+5) The IP address for the best replica server is calculated based on the distance between CLIENT IP and REPLICA SERVERS. The shortest/closestIP of the Replica server is returned.
+6) The answer packet is built with the replica IP, TTL, TYPE information set. DNS_Answer_class handles the packaging
+7) The DNS Packet is built for the given DNS query along with DNS Answer and returned to the client
+
+-----------------
+Challenges Faced:
+-----------------
+1) We had implemented scampers+ geolocations along with Daemon threads to find best replica server. Faced a lot of Multithreading issues.
+2) Finding the location for each replica server was difficult. Also implementing the geolocation formula was tricky.
+3) Executing the deployCDN, runCDN, stopCDN scripts and testing
+
+---------------------
+Features Implemented:
+---------------------
+1) Handling DNS Requests
+2) Geo Location based resolution
+3) Handles for Valid/ Invalid CDN Names
+4) Program doesn't consider inactive replica servers
+
+-------------
+Correctness:
+-------------
+1) Dig request with correct port number and CDN NAME returns best replica IP
+2) The Replica IP returned is closest. N Virginia/ N. California for client in Boston.
+3) Incorrect port number and valid CDN NAME - Time out
+4) Valid Port number and incorrect CDN NAME - Time out
+
+
+------------
+HTTP Server:
+------------
+--------- 
+Approach:
+---------
+
+1) The program accepts PORT NUMBER and ORIGIN SERVER and creates a httpserverOBJ
+2) Initializes the local_cache dictionary, which holds the requested URL's
+3) The HTTP_SERVER sets up the port and origin server and invokes Custom_HTTP_handler object.
+4) The Custom_HTTP_Handler implements BaseHTTPRequestHandler and invokes do_GET() automatically when the client requests for an HTTP page.
+5) Based on the in-memory cache, if the requested URL is not available, it will be fetched from the specified ORIGIN SERVER.
+6) To get the requested page from the ORIGIN SERVER, HTTP GET request is posted.
+7) The Cache is implements a least recently used algorithm. The URL content which is least requested gets replaced. This feature is implemented using the local_cache dictionary as OrderedDict, i.e it remembers the insertion order
+8) Each time a URL is requested, it is popped from the cache, and inserted again so as to keep it most recently used.
+9) The program also respects the in-memory threshold and writes to the disk
+10) In case of Keyboard interrupt or Reboot, the program stores the in-memory cache content to the disk and when the program is run again, it loads the in-memory cache based on the contents retrieved from the disk
+11) The data is compressed and stored on disk as tar files, to efficiently use disk space.
+
+-----------------
+Challenges Faced:
+-----------------
+1) Implemention in-memory cache and respecting the memory usage
+2) Implementing LRU eviction
+3) Implementing disk storage in case of server down time
+4) Testing for various HTTP URL
+5) Creating deployCDN, runCDN, stopCDN scripts and requesting HTTP pages.
+
+---------------------
+Features Implemented:
+---------------------
+1) Handling HTTP Requests
+2) Implements a local in-memory cache
+3) Implements LRU eviction algorithm
+4) Efficiently compress data in cache and writes data onto the disk
+5) Uses tar files for compressing data
+-----------------------
+CORRECTNESS / ACCURACY:
+-----------------------
+1) Accurately downloads the requested file
+2) Correct Port number and replica IP download the page
+3) Incorrect port, incorrect IP, incorrect page - 404 response
+
