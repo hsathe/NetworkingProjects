@@ -1,0 +1,81 @@
+Team Name: NPComplete
+Team Members:
+
+1. Kaustubh Pande
+NUID: 001941507
+Email: kp2301@ccs.neu.edu
+
+2. Harshad Sathe
+NUID: 001715861
+Email: hsathe@ccs.neu.edu
+
+
+Header Formats:
+
+
+IP Header
+0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Version|  IHL  |Type of Service|          Total Length         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Identification        |Flags|      Fragment Offset    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Time to Live |    Protocol   |         Header Checksum       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Source Address                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Destination Address                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+Ref: Binary Tides Tutorial
+
+2. TCP Header:
+0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |          Source Port          |       Destination Port        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Acknowledgment Number                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Data |           |U|A|P|R|S|F|                               |
+   | Offset| Reserved  |R|C|S|S|Y|I|            Window             |
+   |       |           |G|K|H|T|N|N|                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           Checksum            |         Urgent Pointer        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             data                              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Ref: Binary Tides Tutorial
+
+
+Project Approach:
+
+1. In order to conceptualize the implementation of the project, we first had to begin by revisiting fundamental concepts of TCP such as Three-way handshake, sequence and aknowledgement numbers and the overall TCP/IP stack.
+2. After having gone through these basics, we started exploring basics of Raw socket programming in Python. Silver Moon's tutorial served as a very helpful strating point for raw socket programming.
+3. We began implementation by first constructing TCP and IP headers by means in a separate classes. Trial runs helped us analyze the packets being sent and received and their details.
+4. Second step was to establish a successful connection with the server by three way handshake. To make sure this happens successfully, we had to monitor Wireshark very closely.
+5. We then developed code to handle the TCP response from server, to strip the headers off, verify checksum and save the HTTP response.
+6. Sending acknowledgement to each received packet was also important.
+7. Lastly, we developed the code to handle FIN flags from server and gracefully terminate the connection.
+8. Making sure no packets were missed and correct content in correct order gets written into file was the last step.
+
+Challenges:
+
+1. Calculating TCP checksum was very challenging, especially for odd octets, i.e. bytes. We had to read through many tutorials to find out that last extra byte needs to be converted into 16-bit word by padding 0s to its right. And after that, it worked like magic.
+2. Handling sequence numbers and acknowledgement numbers was very challenging. A small mistake in them causes the entire execution to fail.
+3. We faced lot of issues while writing the file. Many times, the content being produced by the program and the one on the serves differed very marginally. It required a lot of debugging to know that issue was the another instance of socket being created and its interference. 
+
+
+Steps to Execute:
+
+1. make
+2. ./rawgethttp [URL_NAME]
+
+NOTE: Successful execution needs root access. Above steps assume that user has root privileges. 
