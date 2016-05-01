@@ -1,0 +1,43 @@
+README
+
+The server runs on the machine cs5700sp16.ccs.neu.edu and listens for request on a TCP socket bound to PORT 27993 or 27994(SSL).
+There are primarily 4 types of messages expected: HELLO, STATUS ,SOLUTION, BYE. Each message is an ASCII string consisting of multiple fields separated by spaces and terminated by a line feed. Messages are case sensitive and have a maximum length of 256 bytes.
+
+Technologies Used:
+Python
+
+Below is the approach: 
+
+1. Client initiates the TCP connection by setting appropriate values of HOST and PORT from command line to respective variables and sends it to either SSL connection or non SSL connection. 
+2. SSL connection is invoked only when -s is one of the command line arguments.
+3. Once the connection with the server is established, client sends the HELLO message to the server by appending NEU ID from command line.
+4. The global variable “flag” keeps track of responses received from server. As and when it receives the BYE message, global flag is set to 0.
+5. While the value of “flag” is 1, client keeps sending the result of arithmetic calculations back to server to get another message. This process repeats until client receives the BYE message. Once the BYE message is received, the “flag” is set to 0 and execution comes out of while loop.
+6. Once out of loop, client simply prints the value of secret flag returned by the server. 
+7. Secret_flag is unique to each valid NEU ID and is different for SSL and non-SSL connections.
+
+
+Steps to execute the program:
+./client <-p port> <-s> [hostname] [NEU ID]
+The -p and -s are optional and hostname, NEU ID are required parameters.
+
+
+Challenges Faced:
+1) To determine different use cases, edge cases , and points of failure for the system
+2) Slow Remote Login connections to the CCIS machine
+3) Python, since me and my partner are new to the language
+
+Coding approach
+1) We initially tested the python program with hard coded NEUID, HOSTNAME, PORT information. Tested basic socket connection. Tested various types of messages and handled failure cases. 
+2) Once the basic program was executed, we provided support for the user to submit PORT, HOSTNAME and NEUID as command line arguments.
+3) Then we supported SSL connections and error handling
+
+Testing Approach:
+
+1) We have tested code on CCIS Machines, using ssh(To connect) and scp (To copy from local machine to CCIS machines)
+2) We have tested our code for various use cases, 
+	Invalid Ports
+	Invalid Host names
+	Invalid number of arguments
+	Invalid NEU ID
+3) Tested that Secret_Flags are different for SSL and Non-SSL connections
