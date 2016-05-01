@@ -1,0 +1,35 @@
+We will use the NS-2 network simulator to perform experiments that will help us understand the behavior of the TCP variants under various load conditions and queuing algorithms. Each of the experiments is described below.
+ 
+Experiment 1:
+1.1 High Level Requirement:
+This experiment would be performed to analyze performance of TCP variants like Tahoe, Reno, NewReno and Vegas under diverse network conditions. The experiment setup is a network topology consisting of six nodes and a set bandwidth of 10 Mbps per link. Using this initial setup, we will analyze the performance of four TCP variants congestive conditions.
+ 
+1.2 Analysis:
+We would analyze throughput, latency and the packet drop rate of the TCP streams based on below parameters.
+Change in Bandwidth of CBR flow: Both increase and decrease of bandwidth is likely to cause significant difference in above parameters.
+Time difference between TCP and CBR streams: First TCP will be started, once it becomes steady, CBR will be introduced. CBR will gradually be increased to observe the congestion in a network.
+Change in Packet size: With increased packet size, congestion is likely to go up.
+Change in Packet Rate: Rate at which the packets are sent across the TCP and CBR flow will affect the situation of congestion.
+Change in Window size: It is the buffer size of each node. Changing this size will compel the network for a congestion.
+ 
+Experiment 2:
+2.1 High Level Requirement:
+This experiment would be performed to analyze the fairness between different TCP variants. This experiment would be a simulation of real world setup where there are different operating systems each with a different variant of TCP. Ideally, no particular variant should get more bandwidth than others. For this experiment, we have three flows: one CBR(N2->N3) and two TCP flows(N1->N4) and (N5->N6)
+ 
+2.2 Analysis:
+We would compare throughput, latency and packet loss rate for each of the TCP variants in a pair. Comparing these three parameters would give us an idea of the dominant TCP variant in a pair, if any. Along with them, we have identified few scenarios which will help us determine the fairness among TCP variants.
+Reduced Bandwidth: In case of reduced bandwidth available, which of the two TCP variants get priority over the other, will be determined by comparing their throughput values.
+Time difference: When one of the TCP variants is started earlier and once it becomes stable, we will introduce another TCP stream. This will eventually cause congestion and in that situation, it will be helpful to know which of them is dominant.
+ 
+Experiment 3:
+3.1 High Level Requirement:
+This experiment would help us analyze the performance of two TCP variants TCN Reno and SACK which uses queueing discipline like DropTail and Random Early Drop(RED) which controls how the packets are treated in a queue. The network topology is same as the other experiments with 1 TCP Flow (N1-N4) and one CBR/UDP(N5-N6). First the TCP flow is started, once it is steady the CBR source would be started.
+ 
+3.2: Analysis
+The experiment will help us analyze the influence of various Queuing disciplines implemented by different TCP variants. We would analyze the performance of TCP Reno and SACK using different queuing strategies i.e when it implements a droptail queue and when it implements a RED queue. We would not change the Time at which the TCP and CBR flow starts. We would also have a fixed bandwidth.
+Based on the algorithm implemented, we would analyze the number of packets dropped, impact on the congestion window, impact on the Transmission time, impact on throughput and latency. We would test these parameters for following scenarios:
+Change in Packet Rate
+Change in Buffer Size
+Change in Packet Size
+ 
+Apart from above mentioned statistical properties, we would also calculate Standard Deviation and Variance of the collected data. That will give us a high level distribution of data. We will also perform the T-Test on average throughput to analyze if the difference is statistically significant.

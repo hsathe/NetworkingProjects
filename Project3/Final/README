@@ -1,0 +1,56 @@
+README 
+The goal of this project is to analyze the different TCP variants TCP-Reno,TCP New Reno,TCP Tahoe,TCP Vegas
+
+Technologies used:
+Python
+TCL scripts
+Excel/Numbers- To plot Graphs
+
+High Level Requirements:
+The first experiment observes the performance of above listed variants under influence of various load conditions. 
+Based on the analysis we should be able to answer following questions:
+which TCP variant(s) are able to get higher average throughput? Which has the lowest average latency? Which has the fewest drops? Is there an overall "best" TCP variant in this experiment, or does the "best" variant vary depending on other circumstances?
+
+The Second experiment would analyze the fairness between different TCP variants.
+Based on the analysis we should be able to answer following questions:
+are the different combinations of variants fair to each other? Are there combinations that are unfair, and if so, why is the combination unfair? To explain unfairness, you will need to think critically about how the protocols are implemented and why the different choices in different TCP variants can impact fairness.
+
+The Third experiment would help us analyse the influence of the queuing discipline used by nodes on the overall throughput of flows.
+Based on the analysis we should be able to answer following questions:
+Does each queuing discipline provide fair bandwidth to each flow?
+How does the end-to-end latency for the flows differ between DropTail and RED?
+How does the TCP flow react to the creation of the CBR flow?
+Is RED a good idea while dealing with SACK?
+
+Steps to execute the experiments
+All the experiments and related files(python script, Tcl script) are kept under the Exp1,Exp2,Exp3 folders.
+
+To run the experiments, 
+Experiment 1:
+Go to Exp1 folder and run
+./client
+Alternately, we can also run the python script directly.
+Run
+$python exp1.py
+
+Experiment 2:
+Go to Exp2 folder and run
+./client
+Alternately, we can also run the python script directly.
+Run
+$python exp2.py
+
+Experiment 3:
+Go to Exp3 folder and run
+./client
+Alternately, we can also run the python script directly.
+Run
+$python exp3.py
+
+Challenges:
+1) Analysis of the different TCP variants was very tough
+2) Writing the paper and providing all the detailed analysis was tricky. 
+
+TESTING Approach:
+1) We tested our code on CCIS Machines, using ssh(To connect) and scp (To copy from local machine to CCIS machines)
+2) We have tested using local NS-2 installation.
